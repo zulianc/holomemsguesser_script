@@ -51,11 +51,11 @@ def eliminate_impossible_answers(alive_members, pick, debut_date, group, generat
                 alives.remove(member)
                 continue
         elif (group == Answers.ORANGE):
-            if (len(group_pick and group_member) == 0):
+            if (len(group_pick & group_member) == 0):
                 alives.remove(member)
                 continue
         elif (group == Answers.RED):
-            if (len(group_pick and group_member) > 0):
+            if (len(group_pick & group_member) > 0):
                 alives.remove(member)
                 continue
 
@@ -142,7 +142,7 @@ def compute_number_possible_left(alive_members, pick, solution):
     group_solution = set([x.strip() for x in data[solution][GROUP].split(",")])
     if (group_pick == group_solution):
         group = Answers.GREEN
-    elif (len(group_pick and group_solution) > 0):
+    elif (len(group_pick & group_solution) > 0):
         group = Answers.ORANGE
     else:
         group = Answers.RED
@@ -200,9 +200,11 @@ def find_best_pick_by_average_left(alive_members):
             average_left_by_member[pick] += compute_number_possible_left(alive_members, pick, solution)
         average_left_by_member[pick] /= len(alive_members)
 
-    print("Member: Average possible left after pick")
-    for member in sorted(average_left_by_member, key=average_left_by_member.get)[:6]:
+    print("--------------------")
+    print("[Guess: Average members left after guess]")
+    for member in sorted(average_left_by_member, key=average_left_by_member.get)[:5]:
         print(member, ": ", average_left_by_member[member], sep="")
+    print("--------------------")
 
 def ask_color(category_name, allow_orange, allow_plusminus):
     while True:
@@ -223,11 +225,10 @@ def ask_color(category_name, allow_orange, allow_plusminus):
             return Answers.RED_PLUS
 
 def UI(algo, members_name):
-    alive_members = members_name
+    alive_members = list(members_name)
 
     while (len(alive_members) > 1):
-        print("Possible members left:", list(alive_members))
-        algo(members_name)
+        algo(alive_members)
 
         pick = ""
         while (pick == ""):
@@ -236,6 +237,7 @@ def UI(algo, members_name):
                 names = member.lower().split(" ")
                 if (answer.lower() in names):
                     pick = member
+        print("You chose:", pick)
 
         debut_date = ask_color("debut date", False, True)
         group = ask_color("group", True, False)
@@ -247,5 +249,7 @@ def UI(algo, members_name):
 
         alive_members = eliminate_impossible_answers(alive_members, pick, debut_date, group, generation, branch, birthday, status, height)
 
-UI(find_best_pick_by_average_left, members_name)
+        print("--------------------")
+        print("Possible members left:", alive_members)
 
+UI(find_best_pick_by_average_left, members_name)
