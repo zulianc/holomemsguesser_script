@@ -44,8 +44,8 @@ def eliminate_impossible_answers(alive_members, pick, debut_date, group, generat
                 alives.remove(member)
                 continue
 
-        group_pick = set(data[pick][GROUP].split(",").strip())
-        group_member = set(data[member][GROUP].split(",").strip())
+        group_pick = set([x.strip() for x in data[pick][GROUP].split(",")])
+        group_member = set([x.strip() for x in data[member][GROUP].split(",")])
         if (group == Answers.GREEN):
             if (group_pick != group_member):
                 alives.remove(member)
@@ -77,6 +77,57 @@ def eliminate_impossible_answers(alive_members, pick, debut_date, group, generat
                 alives.remove(member)
                 continue
 
+        date_pick = data[pick][BIRTHDAY].split("/")
+        date_pick = datetime.date(2004, int(date_pick[0]), int(date_pick[1]))
+        date_member = data[member][BIRTHDAY].split("/")
+        date_member = datetime.date(2004, int(date_member[0]), int(date_member[1]))
+        difference = abs((date_pick - date_member).days)
+        if (birthday == Answers.GREEN):
+            if (difference > 0):
+                alives.remove(member)
+                continue
+        elif (birthday == Answers.ORANGE):
+            if (difference == 0 or difference > 30):
+                alives.remove(member)
+                continue
+        elif (birthday == Answers.RED):
+            if (difference <= 30):
+                alives.remove(member)
+                continue
+
+        if (status == Answers.GREEN):
+            if (data[member][STATUS] != data[pick][STATUS]):
+                alives.remove(member)
+                continue
+        elif (status == Answers.RED):
+            if (data[member][STATUS] == data[pick][STATUS]):
+                alives.remove(member)
+                continue
+
+        height_pick = int(data[pick][HEIGHT].split("cm")[0])
+        height_member = int(data[member][HEIGHT].split("cm")[0])
+        difference = abs(height_pick - height_member)
+        if (height == Answers.GREEN):
+            if (difference > 0):
+                alives.remove(member)
+                continue
+        elif (height == Answers.ORANGE_MINUS):
+            if (difference == 0 or difference > 3 or height_member > height_pick):
+                alives.remove(member)
+                continue
+        elif (height == Answers.ORANGE_PLUS):
+            if (difference == 0 or difference > 3 or height_member < height_pick):
+                alives.remove(member)
+                continue
+        elif (height == Answers.RED_MINUS):
+            if (difference <= 3 or height_member > height_pick):
+                alives.remove(member)
+                continue
+        elif (height == Answers.RED_PLUS):
+            if (difference <= 3 or height_member < height_pick):
+                alives.remove(member)
+                continue
+
     return alives
 
 def compute_number_possible_left(alive_members, pick, solution):
@@ -87,8 +138,8 @@ def compute_number_possible_left(alive_members, pick, solution):
     else:
         debut_date = Answers.RED_PLUS
 
-    group_pick = set(data[pick][GROUP].split(","))
-    group_solution = set(data[solution][GROUP].split(","))
+    group_pick = set([x.strip() for x in data[pick][GROUP].split(",")])
+    group_solution = set([x.strip() for x in data[solution][GROUP].split(",")])
     if (group_pick == group_solution):
         group = Answers.GREEN
     elif (len(group_pick and group_solution) > 0):
@@ -106,11 +157,42 @@ def compute_number_possible_left(alive_members, pick, solution):
     else:
         branch = Answers.RED
 
-    date_pick = datetime.date(2004, data[pick][BIRTHDAY].split("/")[0], data[pick][BIRTHDAY].split("/")[1])
+    date_pick = data[pick][BIRTHDAY].split("/")
+    date_pick = datetime.date(2004, int(date_pick[0]), int(date_pick[1]))
+    date_solution = data[solution][BIRTHDAY].split("/")
+    date_solution = datetime.date(2004, int(date_solution[0]), int(date_solution[1]))
+    difference = abs((date_pick - date_solution).days)
+    if (difference == 0):
+        birthday = Answers.GREEN
+    elif (difference <= 30):
+        birthday = Answers.ORANGE
+    else:
+        birthday = Answers.RED
 
-    return len(eliminate_impossible_answers(alive_members, pick, debut_date, group, generation, branch, "", "", ""))
+    if (data[solution][STATUS] == data[pick][STATUS]):
+        status = Answers.GREEN
+    else:
+        status = Answers.RED
 
-def find_best_pick(alive_members):
+    height_pick = int(data[pick][HEIGHT].split("cm")[0])
+    height_solution = int(data[solution][HEIGHT].split("cm")[0])
+    difference = abs(height_pick - height_solution)
+    if (difference == 0):
+        height = Answers.GREEN
+    elif (difference <= 3):
+        if (height_solution < height_pick):
+            height = Answers.ORANGE_MINUS
+        else:
+            height = Answers.ORANGE_PLUS
+    else:
+        if (height_solution < height_pick):
+            height = Answers.RED_MINUS
+        else:
+            height = Answers.RED_PLUS
+
+    return len(eliminate_impossible_answers(alive_members, pick, debut_date, group, generation, branch, birthday, status, height))
+
+def find_best_pick_by_average_left(alive_members):
     average_left_by_member = dict.fromkeys(alive_members, 0)
 
     for pick in alive_members:
@@ -118,7 +200,52 @@ def find_best_pick(alive_members):
             average_left_by_member[pick] += compute_number_possible_left(alive_members, pick, solution)
         average_left_by_member[pick] /= len(alive_members)
 
-    for member in sorted(average_left_by_member, key=average_left_by_member.get, reverse=True):
-        print(member, average_left_by_member[member])
+    print("Member: Average possible left after pick")
+    for member in sorted(average_left_by_member, key=average_left_by_member.get)[:6]:
+        print(member, ": ", average_left_by_member[member], sep="")
 
-find_best_pick(members_name)
+def ask_color(category_name, allow_orange, allow_plusminus):
+    while True:
+        answer = input("What color did you get for " + category_name + "? Answer with g/o/o-/o+/r-/r+ : ")
+        if (answer == "g"):
+            return Answers.GREEN
+        if (answer == "o" and allow_orange and not allow_plusminus):
+            return Answers.ORANGE
+        if (answer == "o-" and allow_orange and allow_plusminus):
+            return Answers.ORANGE_MINUS
+        if (answer == "o+" and allow_orange and allow_plusminus):
+            return Answers.ORANGE_PLUS
+        if (answer == "r" and not allow_plusminus):
+            return Answers.RED
+        if (answer == "r-" and allow_plusminus):
+            return Answers.RED_MINUS
+        if (answer == "r+" and allow_plusminus):
+            return Answers.RED_PLUS
+
+def UI(algo, members_name):
+    alive_members = members_name
+
+    while (len(alive_members) > 1):
+        print("Possible members left:", list(alive_members))
+        algo(members_name)
+
+        pick = ""
+        while (pick == ""):
+            answer = input("What member did you picked? ")
+            for member in alive_members:
+                names = member.lower().split(" ")
+                if (answer.lower() in names):
+                    pick = member
+
+        debut_date = ask_color("debut date", False, True)
+        group = ask_color("group", True, False)
+        generation = ask_color("generation", False, False)
+        branch = ask_color("branch", False, False)
+        birthday = ask_color("birthday", True, False)
+        status = ask_color("status", False, False)
+        height = ask_color("height", True, True)
+
+        alive_members = eliminate_impossible_answers(alive_members, pick, debut_date, group, generation, branch, birthday, status, height)
+
+UI(find_best_pick_by_average_left, members_name)
+
