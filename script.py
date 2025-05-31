@@ -1,5 +1,6 @@
 import json
 import enum
+import datetime
 
 # website: https://holomemsguesser.com/classic.html
 # members.json: https://holomemsguesser.com/members
@@ -43,8 +44,8 @@ def eliminate_impossible_answers(alive_members, pick, debut_date, group, generat
                 alives.remove(member)
                 continue
 
-        group_pick = set(data[pick][GROUP].split(","))
-        group_member = set(data[member][GROUP].split(","))
+        group_pick = set(data[pick][GROUP].split(",").strip())
+        group_member = set(data[member][GROUP].split(",").strip())
         if (group == Answers.GREEN):
             if (group_pick != group_member):
                 alives.remove(member)
@@ -64,6 +65,15 @@ def eliminate_impossible_answers(alive_members, pick, debut_date, group, generat
                 continue
         elif (generation == Answers.RED):
             if (data[member][GENERATION] == data[pick][GENERATION]):
+                alives.remove(member)
+                continue
+
+        if (branch == Answers.GREEN):
+            if (data[member][BRANCH] != data[pick][BRANCH]):
+                alives.remove(member)
+                continue
+        elif (branch == Answers.RED):
+            if (data[member][BRANCH] == data[pick][BRANCH]):
                 alives.remove(member)
                 continue
 
@@ -91,7 +101,14 @@ def compute_number_possible_left(alive_members, pick, solution):
     else:
         generation = Answers.RED
 
-    return len(eliminate_impossible_answers(alive_members, pick, "", "", generation, "", "", "", ""))
+    if (data[solution][BRANCH] == data[pick][BRANCH]):
+        branch = Answers.GREEN
+    else:
+        branch = Answers.RED
+
+    date_pick = datetime.date(2004, data[pick][BIRTHDAY].split("/")[0], data[pick][BIRTHDAY].split("/")[1])
+
+    return len(eliminate_impossible_answers(alive_members, pick, debut_date, group, generation, branch, "", "", ""))
 
 def find_best_pick(alive_members):
     average_left_by_member = dict.fromkeys(alive_members, 0)
