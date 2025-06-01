@@ -189,7 +189,7 @@ def compute_possible_answers(alive_members, pick, solution):
 
     return eliminate_impossible_answers(alive_members, pick, debut_date, group, generation, branch, birthday, status, height)
 
-def find_best_pick_by_average_left(alive_members):
+def find_best_by_average_left(alive_members):
     average_left_by_member = dict.fromkeys(alive_members, 0)
 
     for pick in alive_members:
