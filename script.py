@@ -2,9 +2,6 @@ import json
 import enum
 import datetime
 
-# website: https://holomemsguesser.com/classic.html
-# members.json: https://holomemsguesser.com/members
-
 file = open("members.json", "r")
 data = json.load(file)
 
@@ -51,7 +48,7 @@ def eliminate_impossible_answers(alive_members, pick, debut_date, group, generat
                 alives.remove(member)
                 continue
         elif (group == Answers.ORANGE):
-            if (len(group_pick & group_member) == 0):
+            if (len(group_pick & group_member) == 0 or group_pick == group_member):
                 alives.remove(member)
                 continue
         elif (group == Answers.RED):
@@ -130,7 +127,7 @@ def eliminate_impossible_answers(alive_members, pick, debut_date, group, generat
 
     return alives
 
-def compute_number_possible_left(alive_members, pick, solution):
+def compute_possible_answers(alive_members, pick, solution):
     if (data[solution][DEBUT_DATE] == data[pick][DEBUT_DATE]):
         debut_date = Answers.GREEN
     elif (data[solution][DEBUT_DATE] < data[pick][DEBUT_DATE]):
@@ -190,20 +187,53 @@ def compute_number_possible_left(alive_members, pick, solution):
         else:
             height = Answers.RED_PLUS
 
-    return len(eliminate_impossible_answers(alive_members, pick, debut_date, group, generation, branch, birthday, status, height))
+    return eliminate_impossible_answers(alive_members, pick, debut_date, group, generation, branch, birthday, status, height)
 
 def find_best_pick_by_average_left(alive_members):
     average_left_by_member = dict.fromkeys(alive_members, 0)
 
     for pick in alive_members:
         for solution in alive_members:
-            average_left_by_member[pick] += compute_number_possible_left(alive_members, pick, solution)
+            sanity_check = compute_possible_answers(alive_members, pick, solution)
+            if not solution in sanity_check:
+                print("failed", solution, pick, sanity_check)
+
+            average_left_by_member[pick] += len(sanity_check)
         average_left_by_member[pick] /= len(alive_members)
 
     print("--------------------")
     print("[Guess: Average members left after guess]")
     for member in sorted(average_left_by_member, key=average_left_by_member.get)[:5]:
         print(member, ": ", average_left_by_member[member], sep="")
+    print("--------------------")
+
+def compute_best_average(alive_members):
+    average_guesses_by_member = dict.fromkeys(alive_members, 0)
+
+    for guess in alive_members:
+        for solution in alive_members:
+            average_guesses_by_member[guess] += 1
+            if (guess == solution):
+                continue
+
+            left_alive = compute_possible_answers(alive_members, guess, solution)
+
+            if len(left_alive) == 0:
+                print("failed", guess, solution, alive_members)
+
+            best_average = min(compute_best_average(left_alive).values())
+            average_guesses_by_member[guess] += best_average
+        average_guesses_by_member[guess] /= len(alive_members)
+    
+    return average_guesses_by_member
+
+def find_best_by_average_guesses(alive_members):
+    average_guesses_by_member = compute_best_average(alive_members)
+
+    print("--------------------")
+    print("[Guess: Average guesses to win]")
+    for member in sorted(average_guesses_by_member, key=average_guesses_by_member.get)[:5]:
+        print(member, ": ", average_guesses_by_member[member], sep="")
     print("--------------------")
 
 def ask_color(category_name, allow_orange, allow_plusminus):
@@ -232,12 +262,12 @@ def UI(algo, members_name):
 
         pick = ""
         while (pick == ""):
-            answer = input("What member did you picked? ")
+            answer = input("What member did you guessed? ")
             for member in alive_members:
                 names = member.lower().split(" ")
                 if (answer.lower() in names):
                     pick = member
-        print("You chose:", pick)
+        print("You guessed:", pick)
 
         debut_date = ask_color("debut date", False, True)
         group = ask_color("group", True, False)
@@ -252,4 +282,8 @@ def UI(algo, members_name):
         print("--------------------")
         print("Possible members left:", alive_members)
 
-UI(find_best_pick_by_average_left, members_name)
+#UI(find_best_pick_by_average_left, members_name)
+UI(find_best_by_average_guesses, members_name)
+
+# website: https://holomemsguesser.com/classic.html
+# members.json: https://holomemsguesser.com/members
