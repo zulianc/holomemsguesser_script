@@ -254,11 +254,14 @@ def ask_color(category_name, allow_orange, allow_plusminus):
         if (answer == "r+" and allow_plusminus):
             return Answers.RED_PLUS
 
-def UI(algo, members_name):
+def UI(algo, members_name, skip_first):
     alive_members = list(members_name)
 
+    skip = skip_first
     while (len(alive_members) > 1):
-        algo(alive_members)
+        if (not skip):
+            algo(alive_members)
+        skip = False
 
         pick = ""
         while (pick == ""):
@@ -282,8 +285,8 @@ def UI(algo, members_name):
         print("--------------------")
         print("Possible members left:", alive_members)
 
-#UI(find_best_pick_by_average_left, members_name)
-UI(find_best_by_average_guesses, members_name)
+#UI(find_best_by_average_left, members_name, True)
+UI(find_best_by_average_guesses, members_name, True)
 
 # website: https://holomemsguesser.com/classic.html
 # members.json: https://holomemsguesser.com/members
