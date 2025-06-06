@@ -205,7 +205,6 @@ def find_best_by_average_left(alive_members):
     print("[Guess: Average members left after guess]")
     for member in sorted(average_left_by_member, key=average_left_by_member.get)[:5]:
         print(member, ": ", average_left_by_member[member], sep="")
-    print("--------------------")
 
 def compute_best_average(alive_members):
     average_guesses_by_member = dict.fromkeys(alive_members, 0)
@@ -234,7 +233,6 @@ def find_best_by_average_guesses(alive_members):
     print("[Guess: Average guesses to win]")
     for member in sorted(average_guesses_by_member, key=average_guesses_by_member.get)[:5]:
         print(member, ": ", average_guesses_by_member[member], sep="")
-    print("--------------------")
 
 def ask_color(category_name, allow_orange, allow_plusminus):
     while True:
@@ -254,14 +252,16 @@ def ask_color(category_name, allow_orange, allow_plusminus):
         if (answer == "r+" and allow_plusminus):
             return Answers.RED_PLUS
 
-def UI(algo, members_name, skip_first):
+def UI(members_name, skip_first):
     alive_members = list(members_name)
 
     skip = skip_first
     while (len(alive_members) > 1):
         if (not skip):
-            algo(alive_members)
+            find_best_by_average_left(alive_members)
+            find_best_by_average_guesses(alive_members)
         skip = False
+        print("--------------------")
 
         pick = ""
         while (pick == ""):
@@ -285,8 +285,7 @@ def UI(algo, members_name, skip_first):
         print("--------------------")
         print("Possible members left:", alive_members)
 
-#UI(find_best_by_average_left, members_name, True)
-UI(find_best_by_average_guesses, members_name, True)
+UI(members_name, True)
 
 # website: https://holomemsguesser.com/classic.html
 # members.json: https://holomemsguesser.com/members
