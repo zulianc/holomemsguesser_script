@@ -4,6 +4,8 @@
 answers = ['Sakura Miko', 'AZKi']
 
 def check_can_be_n_bag(answers, n):
+    i_possibles = []
+
     for i in range(0, n):
         i_possible = True
 
@@ -17,9 +19,9 @@ def check_can_be_n_bag(answers, n):
                 i_possible = False
         
         if i_possible:
-            return [True, i]
+            i_possibles.append(i)
 
-    return False
+    return [len(i_possibles) > 0, i_possibles]
 
 def check_can_be_n_queue(answers, n):
     for i in range(0, len(answers)):
