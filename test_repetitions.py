@@ -1,7 +1,9 @@
 # jeudi 05/06 Sakura Miko
 # vendredi 06/06 AZKi
+# samedi 07/06 Kureiji Ollie
+# dimanche 08/06 Otonose Kanade
 
-answers = ['Sakura Miko', 'AZKi']
+answers = ['Sakura Miko', 'AZKi', 'Kureiji Ollie', 'Otonose Kanade']
 
 def check_can_be_n_bag(answers, n):
     i_possibles = []

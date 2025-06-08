@@ -272,15 +272,19 @@ def UI(members_name, skip_first):
                     pick = member
         print("You guessed:", pick)
 
-        debut_date = ask_color("debut date", False, True)
-        group = ask_color("group", True, False)
-        generation = ask_color("generation", False, False)
-        branch = ask_color("branch", False, False)
-        birthday = ask_color("birthday", True, False)
-        status = ask_color("status", False, False)
-        height = ask_color("height", True, True)
+        answer = input("Correst guess? Answer with y/n : ")
+        if (answer == "y"):
+            alive_members = [pick]
+        else:
+            debut_date = ask_color("debut date", False, True)
+            group = ask_color("group", True, False)
+            generation = ask_color("generation", False, False)
+            branch = ask_color("branch", False, False)
+            birthday = ask_color("birthday", True, False)
+            status = ask_color("status", False, False)
+            height = ask_color("height", True, True)
 
-        alive_members = eliminate_impossible_answers(alive_members, pick, debut_date, group, generation, branch, birthday, status, height)
+            alive_members = eliminate_impossible_answers(alive_members, pick, debut_date, group, generation, branch, birthday, status, height)
 
         print("--------------------")
         print("Possible members left:", alive_members)
