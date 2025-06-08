@@ -1,9 +1,22 @@
-# jeudi 05/06 Sakura Miko
-# vendredi 06/06 AZKi
-# samedi 07/06 Kureiji Ollie
-# dimanche 08/06 Otonose Kanade
+def load_answers_from_file(filename):
+    file = open(filename)
 
-answers = ['Sakura Miko', 'AZKi', 'Kureiji Ollie', 'Otonose Kanade']
+    start_day = file.readline().split("=")[1]
+    start_year = file.readline().split("=")[1]
+
+    answers = []
+    next_unknown_number = 0
+    while True:
+        line = file.readline()
+        if (line == "END"):
+            return answers
+        
+        member = line.split("=")[1]
+        if (member == ""):
+            member = next_unknown_number
+            next_unknown_number += 1
+
+        answers.append(member)
 
 def check_can_be_n_bag(answers, n):
     i_possibles = []
@@ -33,8 +46,9 @@ def check_can_be_n_queue(answers, n):
         
     return True
 
-def check(answers):
-    print("Can be 7 bag?  ", check_can_be_n_bag(answers, 7))
-    print("Can be 7 queue?", check_can_be_n_queue(answers, 7))
+def check(answers, n):
+    print("Can be " + str(n) + " bag?  ", check_can_be_n_bag(answers, n))
+    print("Can be " + str(n) + " queue?", check_can_be_n_queue(answers, n))
 
-check(answers)
+answers = load_answers_from_file("answers.txt")
+check(answers, 7)
