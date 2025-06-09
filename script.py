@@ -2,10 +2,12 @@ import json
 import enum
 import datetime
 
+import test_repetitions
+
 file = open("members.json", "r")
 data = json.load(file)
 
-members_name = data.keys()
+members_name = list(data.keys())
 
 DEBUT_DATE = "Debut_Date"
 GROUP = "Group"
@@ -25,7 +27,7 @@ class Answers(enum.Enum):
     RED_MINUS = 7
 
 def eliminate_impossible_answers(alive_members, pick, debut_date, group, generation, branch, birthday, status, height):
-    alives = list(alive_members)
+    alives = alive_members.copy()
 
     for member in alive_members:
         if (debut_date == Answers.GREEN):
@@ -201,7 +203,6 @@ def find_best_by_average_left(alive_members):
             average_left_by_member[pick] += len(sanity_check)
         average_left_by_member[pick] /= len(alive_members)
 
-    print("--------------------")
     print("[Guess: Average members left after guess]")
     for member in sorted(average_left_by_member, key=average_left_by_member.get)[:5]:
         print(member, ": ", average_left_by_member[member], sep="")
@@ -229,7 +230,6 @@ def compute_best_average(alive_members):
 def find_best_by_average_guesses(alive_members):
     average_guesses_by_member = compute_best_average(alive_members)
 
-    print("--------------------")
     print("[Guess: Average guesses to win]")
     for member in sorted(average_guesses_by_member, key=average_guesses_by_member.get)[:5]:
         print(member, ": ", average_guesses_by_member[member], sep="")
@@ -253,12 +253,14 @@ def ask_color(category_name, allow_orange, allow_plusminus):
             return Answers.RED_PLUS
 
 def UI(members_name, skip_first):
-    alive_members = list(members_name)
+    alive_members = members_name.copy()
 
     skip = skip_first
     while (len(alive_members) > 1):
         if (not skip):
+            print("--------------------")
             find_best_by_average_left(alive_members)
+            print("--------------------")
             find_best_by_average_guesses(alive_members)
         skip = False
         print("--------------------")
@@ -288,6 +290,19 @@ def UI(members_name, skip_first):
 
         print("--------------------")
         print("Possible members left:", alive_members)
+
+    if (len(alive_members) != 1):
+        print("Error: no members left!")
+        return
+
+    last_member = alive_members[0]
+    filename = "answers.txt"
+    
+    print("--------------------")
+    test_repetitions.write_answer_to_file(last_member, filename)
+    answers = test_repetitions.load_answers_from_file(filename)
+    test_repetitions.check(answers, 7)
+    print("--------------------")
 
 UI(members_name, True)
 

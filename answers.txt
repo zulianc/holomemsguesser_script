@@ -1,7 +1,6 @@
-START_DAY=THURSDAY
-START_YEAR=2025
-05/06=Sakura Miko
-06/06=AZKi
-07/06=Kureiji Ollie
-08/06=Otonose Kanade
+05/06/2025=Sakura Miko
+06/06/2025=AZKi
+07/06/2025=Kureiji Ollie
+08/06/2025=Otonose Kanade
+09/06/2025=A chan
 END

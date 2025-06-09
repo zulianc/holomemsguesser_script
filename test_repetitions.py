@@ -1,8 +1,7 @@
+import datetime
+
 def load_answers_from_file(filename):
     file = open(filename)
-
-    start_day = file.readline().split("=")[1]
-    start_year = file.readline().split("=")[1]
 
     answers = []
     next_unknown_number = 0
@@ -12,11 +11,43 @@ def load_answers_from_file(filename):
             return answers
         
         member = line.split("=")[1]
-        if (member == ""):
+        if (member == "\n"):
             member = next_unknown_number
             next_unknown_number += 1
 
         answers.append(member)
+
+def write_answer_to_file(answer, filename):
+    today_date = datetime.date.today()
+    date_string_format = "%d/%m/%Y"
+
+    file = open(filename, 'r')
+    data = file.readlines()
+
+    current_date = ""
+    file = open(filename, 'w')
+    for line in data:
+        if line != "END":
+            date = line.split("=")[0].split("/")
+            current_date = datetime.date(day=int(date[0]), month=int(date[1]), year=int(date[2]))
+
+            if current_date == today_date:
+                print("Can't write answer to file: already an answer for today!")
+                file.write(line)
+                file.write("END")
+                return
+
+        if line == "END":
+            if current_date != "":
+                current_date += datetime.timedelta(days=1)
+                while current_date != today_date:
+                    file.write(current_date.strftime(date_string_format) + "=\n")
+                    current_date += datetime.timedelta(days=1)
+            
+            file.write(today_date.strftime(date_string_format) + "=" + answer + "\n")
+            file.write("END")
+        else:
+            file.write(line)
 
 def check_can_be_n_bag(answers, n):
     i_possibles = []
@@ -49,6 +80,3 @@ def check_can_be_n_queue(answers, n):
 def check(answers, n):
     print("Can be " + str(n) + " bag?  ", check_can_be_n_bag(answers, n))
     print("Can be " + str(n) + " queue?", check_can_be_n_queue(answers, n))
-
-answers = load_answers_from_file("answers.txt")
-check(answers, 7)
