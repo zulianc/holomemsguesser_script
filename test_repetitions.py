@@ -1,4 +1,5 @@
 import datetime
+import collections
 
 def load_answers_from_file(filename):
     file = open(filename)
@@ -80,3 +81,9 @@ def check_can_be_n_queue(answers, n):
 def check(answers, n):
     print("Can be " + str(n) + " bag?  ", check_can_be_n_bag(answers, n))
     print("Can be " + str(n) + " queue?", check_can_be_n_queue(answers, n))
+
+def count(answers):
+    count = collections.Counter(answers)
+    print("Members appearing most:")
+    for member in sorted(count, key=count.get, reverse=True)[:5]:
+        print(member.split("\n")[0], ": ", count[member], sep="")

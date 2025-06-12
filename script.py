@@ -298,10 +298,13 @@ def UI(members_name, skip_first):
     last_member = alive_members[0]
     filename = "answers.txt"
     
-    print("--------------------")
     test_repetitions.write_answer_to_file(last_member, filename)
     answers = test_repetitions.load_answers_from_file(filename)
+
+    print("--------------------")
     test_repetitions.check(answers, 7)
+    print("--------------------")
+    test_repetitions.count(answers)
     print("--------------------")
 
 UI(members_name, True)
