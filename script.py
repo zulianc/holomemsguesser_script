@@ -191,7 +191,7 @@ def compute_possible_answers(alive_members, pick, solution):
 
     return eliminate_impossible_answers(alive_members, pick, debut_date, group, generation, branch, birthday, status, height)
 
-def find_best_by_average_left(alive_members):
+def find_best_by_average_left(alive_members, print_answers):
     average_left_by_member = dict.fromkeys(alive_members, 0)
 
     for pick in alive_members:
@@ -203,9 +203,10 @@ def find_best_by_average_left(alive_members):
             average_left_by_member[pick] += len(sanity_check)
         average_left_by_member[pick] /= len(alive_members)
 
-    print("[Guess: Average members left after guess]")
-    for member in sorted(average_left_by_member, key=average_left_by_member.get)[:5]:
-        print(member, ": ", average_left_by_member[member], sep="")
+    if print_answers:
+        print("[Guess: Average members left after guess]")
+        for member in sorted(average_left_by_member, key=average_left_by_member.get)[:5]:
+            print(member, ": ", average_left_by_member[member], sep="")
 
     return average_left_by_member
 
@@ -229,12 +230,13 @@ def compute_best_average(alive_members):
     
     return average_guesses_by_member
 
-def find_best_by_average_guesses(alive_members):
+def find_best_by_average_guesses(alive_members, print_answers):
     average_guesses_by_member = compute_best_average(alive_members)
 
-    print("[Guess: Average guesses to win]")
-    for member in sorted(average_guesses_by_member, key=average_guesses_by_member.get)[:5]:
-        print(member, ": ", average_guesses_by_member[member], sep="")
+    if print_answers:
+        print("[Guess: Average guesses to win]")
+        for member in sorted(average_guesses_by_member, key=average_guesses_by_member.get)[:5]:
+            print(member, ": ", average_guesses_by_member[member], sep="")
 
     return average_guesses_by_member
 
@@ -263,9 +265,9 @@ def UI(members_name, skip_first):
     while (len(alive_members) > 1):
         if (not skip):
             print("--------------------")
-            find_best_by_average_left(alive_members)
+            find_best_by_average_left(alive_members, print_answers=True)
             print("--------------------")
-            find_best_by_average_guesses(alive_members)
+            find_best_by_average_guesses(alive_members, print_answers=True)
         skip = False
         print("--------------------")
 
@@ -323,19 +325,16 @@ def testo(members_name, pick):
             guess_number_per_member[solution] += 1
             alive_members = compute_possible_answers(alive_members, next_pick, solution)
 
-            print("----------------", solution, next_pick, alive_members)
-
             if len(alive_members) == 1 and next_pick == alive_members[0]:
                 break
             else:
-                algo_results = find_best_by_average_guesses(alive_members)
+                algo_results = find_best_by_average_guesses(alive_members, print_answers=False)
                 next_pick = sorted(algo_results, key=algo_results.get)[0]
-
-            print("/////////////////", algo_results)
 
     print([(str(x) + ": " + str(guess_number_per_member[x])) for x in sorted(guess_number_per_member, key=guess_number_per_member.get)])
 
 # testo(members_name, "Kazama Iroha")
+# testo(members_name, "Koseki Bijou")
 
 # website: https://holomemsguesser.com/classic.html
 # members.json: https://holomemsguesser.com/members
