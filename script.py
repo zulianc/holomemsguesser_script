@@ -207,6 +207,8 @@ def find_best_by_average_left(alive_members):
     for member in sorted(average_left_by_member, key=average_left_by_member.get)[:5]:
         print(member, ": ", average_left_by_member[member], sep="")
 
+    return average_left_by_member
+
 def compute_best_average(alive_members):
     average_guesses_by_member = dict.fromkeys(alive_members, 0)
 
@@ -233,6 +235,8 @@ def find_best_by_average_guesses(alive_members):
     print("[Guess: Average guesses to win]")
     for member in sorted(average_guesses_by_member, key=average_guesses_by_member.get)[:5]:
         print(member, ": ", average_guesses_by_member[member], sep="")
+
+    return average_guesses_by_member
 
 def ask_color(category_name, allow_orange, allow_plusminus):
     while True:
@@ -308,6 +312,30 @@ def UI(members_name, skip_first):
     print("--------------------")
 
 UI(members_name, True)
+
+def testo(members_name, pick):
+    guess_number_per_member = dict.fromkeys(members_name, 0)
+
+    for solution in members_name:
+        alive_members = members_name.copy()
+        next_pick = pick
+        while True:
+            guess_number_per_member[solution] += 1
+            alive_members = compute_possible_answers(alive_members, next_pick, solution)
+
+            print("----------------", solution, next_pick, alive_members)
+
+            if len(alive_members) == 1 and next_pick == alive_members[0]:
+                break
+            else:
+                algo_results = find_best_by_average_guesses(alive_members)
+                next_pick = sorted(algo_results, key=algo_results.get)[0]
+
+            print("/////////////////", algo_results)
+
+    print([(str(x) + ": " + str(guess_number_per_member[x])) for x in sorted(guess_number_per_member, key=guess_number_per_member.get)])
+
+# testo(members_name, "Kazama Iroha")
 
 # website: https://holomemsguesser.com/classic.html
 # members.json: https://holomemsguesser.com/members
