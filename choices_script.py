@@ -189,7 +189,7 @@ def compute_possible_answers(alive_members, pick, solution):
 
     return eliminate_impossible_answers(alive_members, pick, debut_date, group, generation, branch, birthday, status, height)
 
-def find_best_by_average_left(alive_members, print_answers):
+def find_best_by_average_left(alive_members):
     average_left_by_member = dict.fromkeys(alive_members, 0)
 
     for pick in alive_members:
@@ -201,14 +201,9 @@ def find_best_by_average_left(alive_members, print_answers):
             average_left_by_member[pick] += len(sanity_check)
         average_left_by_member[pick] /= len(alive_members)
 
-    if print_answers:
-        print("[Guess: Average members left after guess]")
-        for member in sorted(average_left_by_member, key=average_left_by_member.get)[:5]:
-            print(member, ": ", average_left_by_member[member], sep="")
-
     return average_left_by_member
 
-def compute_best_average(alive_members):
+def find_best_by_average_guesses(alive_members):
     average_guesses_by_member = dict.fromkeys(alive_members, 0)
 
     for guess in alive_members:
@@ -222,18 +217,8 @@ def compute_best_average(alive_members):
             if len(left_alive) == 0:
                 print("failed", guess, solution, alive_members)
 
-            best_average = min(compute_best_average(left_alive).values())
+            best_average = min(find_best_by_average_guesses(left_alive).values())
             average_guesses_by_member[guess] += best_average
         average_guesses_by_member[guess] /= len(alive_members)
     
-    return average_guesses_by_member
-
-def find_best_by_average_guesses(alive_members, print_answers):
-    average_guesses_by_member = compute_best_average(alive_members)
-
-    if print_answers:
-        print("[Guess: Average guesses to win]")
-        for member in sorted(average_guesses_by_member, key=average_guesses_by_member.get)[:5]:
-            print(member, ": ", average_guesses_by_member[member], sep="")
-
     return average_guesses_by_member

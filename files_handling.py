@@ -24,8 +24,13 @@ def write_answer_to_file(answer, filename):
 
     filepath = "files/" + filename + ".txt"
 
-    file = open(filepath, 'r')
-    data = file.readlines()
+    try:
+        open(filepath, 'r')
+    except:
+        open(filepath, 'x')
+        open(filepath, 'w').write("END")
+    finally:
+        data = open(filepath, 'r').readlines()
 
     current_date = ""
     file = open(filepath, 'w')

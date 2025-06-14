@@ -20,26 +20,55 @@ def ask_color(category_name, allow_orange, allow_plusminus):
         if (answer == "r+" and allow_plusminus):
             return choices_script.Answers.RED_PLUS
         
-def UI(members_name, skip_first):
+def show_script_results(alive_members, number_showed):
+    average_left_by_member = choices_script.find_best_by_average_left(alive_members)
+    print("--------------------")
+    print("[Guess: Average members left after guess]")
+    for member in sorted(average_left_by_member, key=average_left_by_member.get)[:number_showed]:
+        print(str(member) + ": " + str(average_left_by_member[member]))
+
+    average_guesses_by_member = choices_script.find_best_by_average_guesses(alive_members)
+    print("--------------------")
+    print("[Guess: Average guesses to win]")
+    for member in sorted(average_guesses_by_member, key=average_guesses_by_member.get)[:number_showed]:
+        print(str(member) + ": " + str(average_guesses_by_member[member]))
+
+def register_results(solution, filename):
+    files_handling.write_answer_to_file(solution, filename)
+    answers = files_handling.load_answers_from_file(filename)
+
+    print("--------------------")
+    test_repetitions.check(answers, 7)
+    print("--------------------")
+    test_repetitions.count(answers)
+
+def check_results(filename):
+    answers = files_handling.load_answers_from_file(filename)
+
+    print("--------------------")
+    test_repetitions.check(answers, 7)
+    print("--------------------")
+    test_repetitions.count(answers)
+
+def find_member(alive_members, message):
+    while True:
+        answer = input(message)
+        for member in alive_members:
+            names = member.lower().split(" ") + [member.lower()]
+            if (answer.lower() in names):
+                return member
+
+def UI_base(members_name, skip_first):
     alive_members = members_name.copy()
 
     skip = skip_first
     while (len(alive_members) > 1):
         if (not skip):
-            print("--------------------")
-            choices_script.find_best_by_average_left(alive_members, print_answers=True)
-            print("--------------------")
-            choices_script.find_best_by_average_guesses(alive_members, print_answers=True)
+            show_script_results(alive_members, 5)
         skip = False
         print("--------------------")
 
-        pick = ""
-        while (pick == ""):
-            answer = input("What member did you guessed? ")
-            for member in alive_members:
-                names = member.lower().split(" ")
-                if (answer.lower() in names):
-                    pick = member
+        pick = find_member(alive_members, "What member did you guessed? ")
         print("You guessed:", pick)
 
         answer = input("Correst guess? Answer with 'y' or nothing: ")
@@ -62,20 +91,51 @@ def UI(members_name, skip_first):
     if (len(alive_members) != 1):
         print("Error: no members left!")
         return
-
-    last_member = alive_members[0]
-    filename = "answers"
     
-    files_handling.write_answer_to_file(last_member, filename)
-    answers = files_handling.load_answers_from_file(filename)
+    register_results(alive_members[0], "answers_base")
+
+def UI_music(members_name):
+    alive_members = members_name.copy()
+    print("--------------------")
+    solution = find_member(alive_members, "What is the solution for music? ")
+    register_results(solution, "answers_music")
+
+def UI_fanbase(members_name):
+    alive_members = members_name.copy()
+    print("--------------------")
+    solution = find_member(alive_members, "What is the solution for fanbase? ")
+    register_results(solution, "answers_fanbase")
+
+def UI_stream(members_name):
+    alive_members = members_name.copy()
+    print("--------------------")
+    solution = find_member(alive_members, "What is the solution for stream? ")
+    register_results(solution, "answers_stream")
+
+def skip_option(mode_name):
+    print("--------------------")
+    answer = input("Will you skip answering for " + mode_name + " mode? Answer with 'y' or nothing: ")
+    return (answer == 'y')
+
+def UI(members_name, skip_first):
+    if skip_option("every"):
+        check_results("answers_base")
+        check_results("answers_music")
+        check_results("answers_fanbase")
+        check_results("answers_stream")
+    else:
+        if not skip_option("base"):
+            UI_base(members_name, skip_first)
+        if not skip_option("music"):
+            UI_music(members_name)
+        if not skip_option("fanbase"):
+            UI_fanbase(members_name)
+        if not skip_option("stream"):
+            UI_stream(members_name)
 
     print("--------------------")
-    test_repetitions.check(answers, 7)
-    print("--------------------")
-    test_repetitions.count(answers)
-    print("--------------------")
 
-def testo(members_name, pick):
+def compute_needed_guesses(members_name, pick):
     guess_number_per_member = dict.fromkeys(members_name, 0)
 
     for solution in members_name:
@@ -88,7 +148,7 @@ def testo(members_name, pick):
             if len(alive_members) == 1 and next_pick == alive_members[0]:
                 break
             else:
-                algo_results = choices_script.find_best_by_average_guesses(alive_members, print_answers=False)
+                algo_results = choices_script.find_best_by_average_guesses(alive_members)
                 next_pick = sorted(algo_results, key=algo_results.get)[0]
 
     print([(str(x) + ": " + str(guess_number_per_member[x])) for x in sorted(guess_number_per_member, key=guess_number_per_member.get)])
@@ -97,8 +157,8 @@ members_name = choices_script.get_all_members_name()
 
 UI(members_name, True)
 
-# testo(members_name, "Kazama Iroha")
-# testo(members_name, "Koseki Bijou")
+# compute_needed_guesses(members_name, "Kazama Iroha")
+# compute_needed_guesses(members_name, "Koseki Bijou")
 
 # website: https://holomemsguesser.com/classic.html
 # members.json: https://holomemsguesser.com/members
