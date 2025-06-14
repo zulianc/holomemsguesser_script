@@ -2,12 +2,7 @@ import json
 import enum
 import datetime
 
-import test_repetitions
-
-file = open("members.json", "r")
-data = json.load(file)
-
-members_name = list(data.keys())
+MEMBERS_DATA = json.load(open("files/members.json", "r"))
 
 DEBUT_DATE = "Debut_Date"
 GROUP = "Group"
@@ -26,25 +21,28 @@ class Answers(enum.Enum):
     RED_PLUS = 6
     RED_MINUS = 7
 
+def get_all_members_name():
+    return list(MEMBERS_DATA.keys())
+
 def eliminate_impossible_answers(alive_members, pick, debut_date, group, generation, branch, birthday, status, height):
     alives = alive_members.copy()
 
     for member in alive_members:
         if (debut_date == Answers.GREEN):
-            if (data[member][DEBUT_DATE] != data[pick][DEBUT_DATE]):
+            if (MEMBERS_DATA[member][DEBUT_DATE] != MEMBERS_DATA[pick][DEBUT_DATE]):
                 alives.remove(member)
                 continue
         elif (debut_date == Answers.RED_MINUS):
-            if (data[member][DEBUT_DATE] >= data[pick][DEBUT_DATE]):
+            if (MEMBERS_DATA[member][DEBUT_DATE] >= MEMBERS_DATA[pick][DEBUT_DATE]):
                 alives.remove(member)
                 continue
         elif (debut_date == Answers.RED_PLUS):
-            if (data[member][DEBUT_DATE] <= data[pick][DEBUT_DATE]):
+            if (MEMBERS_DATA[member][DEBUT_DATE] <= MEMBERS_DATA[pick][DEBUT_DATE]):
                 alives.remove(member)
                 continue
 
-        group_pick = set([x.strip() for x in data[pick][GROUP].split(",")])
-        group_member = set([x.strip() for x in data[member][GROUP].split(",")])
+        group_pick = set([x.strip() for x in MEMBERS_DATA[pick][GROUP].split(",")])
+        group_member = set([x.strip() for x in MEMBERS_DATA[member][GROUP].split(",")])
         if (group == Answers.GREEN):
             if (group_pick != group_member):
                 alives.remove(member)
@@ -59,26 +57,26 @@ def eliminate_impossible_answers(alive_members, pick, debut_date, group, generat
                 continue
 
         if (generation == Answers.GREEN):
-            if (data[member][GENERATION] != data[pick][GENERATION]):
+            if (MEMBERS_DATA[member][GENERATION] != MEMBERS_DATA[pick][GENERATION]):
                 alives.remove(member)
                 continue
         elif (generation == Answers.RED):
-            if (data[member][GENERATION] == data[pick][GENERATION]):
+            if (MEMBERS_DATA[member][GENERATION] == MEMBERS_DATA[pick][GENERATION]):
                 alives.remove(member)
                 continue
 
         if (branch == Answers.GREEN):
-            if (data[member][BRANCH] != data[pick][BRANCH]):
+            if (MEMBERS_DATA[member][BRANCH] != MEMBERS_DATA[pick][BRANCH]):
                 alives.remove(member)
                 continue
         elif (branch == Answers.RED):
-            if (data[member][BRANCH] == data[pick][BRANCH]):
+            if (MEMBERS_DATA[member][BRANCH] == MEMBERS_DATA[pick][BRANCH]):
                 alives.remove(member)
                 continue
 
-        date_pick = data[pick][BIRTHDAY].split("/")
+        date_pick = MEMBERS_DATA[pick][BIRTHDAY].split("/")
         date_pick = datetime.date(2004, int(date_pick[0]), int(date_pick[1]))
-        date_member = data[member][BIRTHDAY].split("/")
+        date_member = MEMBERS_DATA[member][BIRTHDAY].split("/")
         date_member = datetime.date(2004, int(date_member[0]), int(date_member[1]))
         difference = abs((date_pick - date_member).days)
         if (birthday == Answers.GREEN):
@@ -95,16 +93,16 @@ def eliminate_impossible_answers(alive_members, pick, debut_date, group, generat
                 continue
 
         if (status == Answers.GREEN):
-            if (data[member][STATUS] != data[pick][STATUS]):
+            if (MEMBERS_DATA[member][STATUS] != MEMBERS_DATA[pick][STATUS]):
                 alives.remove(member)
                 continue
         elif (status == Answers.RED):
-            if (data[member][STATUS] == data[pick][STATUS]):
+            if (MEMBERS_DATA[member][STATUS] == MEMBERS_DATA[pick][STATUS]):
                 alives.remove(member)
                 continue
 
-        height_pick = int(data[pick][HEIGHT].split("cm")[0])
-        height_member = int(data[member][HEIGHT].split("cm")[0])
+        height_pick = int(MEMBERS_DATA[pick][HEIGHT].split("cm")[0])
+        height_member = int(MEMBERS_DATA[member][HEIGHT].split("cm")[0])
         difference = abs(height_pick - height_member)
         if (height == Answers.GREEN):
             if (difference > 0):
@@ -130,15 +128,15 @@ def eliminate_impossible_answers(alive_members, pick, debut_date, group, generat
     return alives
 
 def compute_possible_answers(alive_members, pick, solution):
-    if (data[solution][DEBUT_DATE] == data[pick][DEBUT_DATE]):
+    if (MEMBERS_DATA[solution][DEBUT_DATE] == MEMBERS_DATA[pick][DEBUT_DATE]):
         debut_date = Answers.GREEN
-    elif (data[solution][DEBUT_DATE] < data[pick][DEBUT_DATE]):
+    elif (MEMBERS_DATA[solution][DEBUT_DATE] < MEMBERS_DATA[pick][DEBUT_DATE]):
         debut_date = Answers.RED_MINUS
     else:
         debut_date = Answers.RED_PLUS
 
-    group_pick = set([x.strip() for x in data[pick][GROUP].split(",")])
-    group_solution = set([x.strip() for x in data[solution][GROUP].split(",")])
+    group_pick = set([x.strip() for x in MEMBERS_DATA[pick][GROUP].split(",")])
+    group_solution = set([x.strip() for x in MEMBERS_DATA[solution][GROUP].split(",")])
     if (group_pick == group_solution):
         group = Answers.GREEN
     elif (len(group_pick & group_solution) > 0):
@@ -146,19 +144,19 @@ def compute_possible_answers(alive_members, pick, solution):
     else:
         group = Answers.RED
 
-    if (data[solution][GENERATION] == data[pick][GENERATION]):
+    if (MEMBERS_DATA[solution][GENERATION] == MEMBERS_DATA[pick][GENERATION]):
         generation = Answers.GREEN
     else:
         generation = Answers.RED
 
-    if (data[solution][BRANCH] == data[pick][BRANCH]):
+    if (MEMBERS_DATA[solution][BRANCH] == MEMBERS_DATA[pick][BRANCH]):
         branch = Answers.GREEN
     else:
         branch = Answers.RED
 
-    date_pick = data[pick][BIRTHDAY].split("/")
+    date_pick = MEMBERS_DATA[pick][BIRTHDAY].split("/")
     date_pick = datetime.date(2004, int(date_pick[0]), int(date_pick[1]))
-    date_solution = data[solution][BIRTHDAY].split("/")
+    date_solution = MEMBERS_DATA[solution][BIRTHDAY].split("/")
     date_solution = datetime.date(2004, int(date_solution[0]), int(date_solution[1]))
     difference = abs((date_pick - date_solution).days)
     if (difference == 0):
@@ -168,13 +166,13 @@ def compute_possible_answers(alive_members, pick, solution):
     else:
         birthday = Answers.RED
 
-    if (data[solution][STATUS] == data[pick][STATUS]):
+    if (MEMBERS_DATA[solution][STATUS] == MEMBERS_DATA[pick][STATUS]):
         status = Answers.GREEN
     else:
         status = Answers.RED
 
-    height_pick = int(data[pick][HEIGHT].split("cm")[0])
-    height_solution = int(data[solution][HEIGHT].split("cm")[0])
+    height_pick = int(MEMBERS_DATA[pick][HEIGHT].split("cm")[0])
+    height_solution = int(MEMBERS_DATA[solution][HEIGHT].split("cm")[0])
     difference = abs(height_pick - height_solution)
     if (difference == 0):
         height = Answers.GREEN
@@ -239,102 +237,3 @@ def find_best_by_average_guesses(alive_members, print_answers):
             print(member, ": ", average_guesses_by_member[member], sep="")
 
     return average_guesses_by_member
-
-def ask_color(category_name, allow_orange, allow_plusminus):
-    while True:
-        answer = input("What color did you get for " + category_name + "? Answer with g/o/o-/o+/r-/r+ : ")
-        if (answer == "g"):
-            return Answers.GREEN
-        if (answer == "o" and allow_orange and not allow_plusminus):
-            return Answers.ORANGE
-        if (answer == "o-" and allow_orange and allow_plusminus):
-            return Answers.ORANGE_MINUS
-        if (answer == "o+" and allow_orange and allow_plusminus):
-            return Answers.ORANGE_PLUS
-        if (answer == "r" and not allow_plusminus):
-            return Answers.RED
-        if (answer == "r-" and allow_plusminus):
-            return Answers.RED_MINUS
-        if (answer == "r+" and allow_plusminus):
-            return Answers.RED_PLUS
-
-def UI(members_name, skip_first):
-    alive_members = members_name.copy()
-
-    skip = skip_first
-    while (len(alive_members) > 1):
-        if (not skip):
-            print("--------------------")
-            find_best_by_average_left(alive_members, print_answers=True)
-            print("--------------------")
-            find_best_by_average_guesses(alive_members, print_answers=True)
-        skip = False
-        print("--------------------")
-
-        pick = ""
-        while (pick == ""):
-            answer = input("What member did you guessed? ")
-            for member in alive_members:
-                names = member.lower().split(" ")
-                if (answer.lower() in names):
-                    pick = member
-        print("You guessed:", pick)
-
-        answer = input("Correst guess? Answer with y/n : ")
-        if (answer == "y"):
-            alive_members = [pick]
-        else:
-            debut_date = ask_color("debut date", False, True)
-            group = ask_color("group", True, False)
-            generation = ask_color("generation", False, False)
-            branch = ask_color("branch", False, False)
-            birthday = ask_color("birthday", True, False)
-            status = ask_color("status", False, False)
-            height = ask_color("height", True, True)
-
-            alive_members = eliminate_impossible_answers(alive_members, pick, debut_date, group, generation, branch, birthday, status, height)
-
-        print("--------------------")
-        print("Possible members left:", alive_members)
-
-    if (len(alive_members) != 1):
-        print("Error: no members left!")
-        return
-
-    last_member = alive_members[0]
-    filename = "answers.txt"
-    
-    test_repetitions.write_answer_to_file(last_member, filename)
-    answers = test_repetitions.load_answers_from_file(filename)
-
-    print("--------------------")
-    test_repetitions.check(answers, 7)
-    print("--------------------")
-    test_repetitions.count(answers)
-    print("--------------------")
-
-UI(members_name, True)
-
-def testo(members_name, pick):
-    guess_number_per_member = dict.fromkeys(members_name, 0)
-
-    for solution in members_name:
-        alive_members = members_name.copy()
-        next_pick = pick
-        while True:
-            guess_number_per_member[solution] += 1
-            alive_members = compute_possible_answers(alive_members, next_pick, solution)
-
-            if len(alive_members) == 1 and next_pick == alive_members[0]:
-                break
-            else:
-                algo_results = find_best_by_average_guesses(alive_members, print_answers=False)
-                next_pick = sorted(algo_results, key=algo_results.get)[0]
-
-    print([(str(x) + ": " + str(guess_number_per_member[x])) for x in sorted(guess_number_per_member, key=guess_number_per_member.get)])
-
-# testo(members_name, "Kazama Iroha")
-# testo(members_name, "Koseki Bijou")
-
-# website: https://holomemsguesser.com/classic.html
-# members.json: https://holomemsguesser.com/members
