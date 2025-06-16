@@ -56,6 +56,7 @@ def find_member(alive_members, message):
         for member in alive_members:
             names = member.lower().split(" ") + [member.lower()]
             if (answer.lower() in names):
+                print("You typed:", member)
                 return member
 
 def UI_base(members_name, skip_first):
@@ -69,7 +70,6 @@ def UI_base(members_name, skip_first):
         print("--------------------")
 
         pick = find_member(alive_members, "What member did you guessed? ")
-        print("You guessed:", pick)
 
         answer = input("Correst guess? Answer with 'y' or nothing: ")
         if (answer == "y"):

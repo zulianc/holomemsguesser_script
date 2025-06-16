@@ -1,2 +1,4 @@
 14/06/2025=Raora Panthera
+15/06/2025=Ninomae Inanis
+16/06/2025=Tokino Sora
 END
