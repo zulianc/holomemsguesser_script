@@ -1,4 +1,7 @@
 14/06/2025=Momosuzu Nene
 15/06/2025=Hakos Baelz
 16/06/2025=Fuwamoco
+17/06/2025=Gawr Gura
+18/06/2025=Nekomata Okayu
+19/06/2025=Houshou Marine
 END

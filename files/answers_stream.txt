@@ -1,4 +1,7 @@
 14/06/2025=Shiori Novella
 15/06/2025=Mizumiya Su
 16/06/2025=Kobo Kanaeru
+17/06/2025=Uruha Rushia
+18/06/2025=Takane Lui
+19/06/2025=Moona Hoshinova
 END

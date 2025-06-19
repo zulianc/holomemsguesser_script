@@ -19,7 +19,8 @@ def load_answers_from_file(filename):
         answers.append(member)
 
 def write_answer_to_file(answer, filename):
-    today_date = datetime.date.today()
+    today_datetime = datetime.datetime.now() - datetime.timedelta(hours=6)
+    today_date = datetime.date(year=today_datetime.year, month=today_datetime.month, day=today_datetime.day)
     date_string_format = "%d/%m/%Y"
 
     filepath = "files/" + filename + ".txt"

@@ -1,4 +1,7 @@
 14/06/2025=Raora Panthera
 15/06/2025=Ninomae Inanis
 16/06/2025=Tokino Sora
+17/06/2025=Usada Pekora
+18/06/2025=Sakamata Chloe
+19/06/2025=Oozora Subaru
 END
