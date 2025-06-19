@@ -33,7 +33,8 @@ def check(answers, n):
     print("Can be " + str(n) + " queue?", check_can_be_n_queue(answers, n))
 
 def count(answers):
-    count = collections.Counter(answers)
+    members = [x for x in answers.copy() if isinstance(x, str)]
+    count = collections.Counter(members)
     print("Members appearing most:")
     for member in sorted(count, key=count.get, reverse=True)[:5]:
         print(member.split("\n")[0], ": ", count[member], sep="")

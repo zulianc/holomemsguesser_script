@@ -33,8 +33,18 @@ def write_answer_to_file(answer, filename):
     finally:
         data = open(filepath, 'r').readlines()
 
-    current_date = ""
     file = open(filepath, 'w')
+
+    if data[0] == "END":
+        current_date = today_date
+    else:
+        date = data[0].split("=")[0].split("/")
+        current_date = datetime.date(day=int(date[0]), month=int(date[1]), year=int(date[2]))
+    monday = current_date - datetime.timedelta(days=current_date.weekday())
+    while monday != current_date:
+        file.write(monday.strftime(date_string_format) + "=\n")
+        monday += datetime.timedelta(days=1)
+    
     for line in data:
         if line != "END":
             date = line.split("=")[0].split("/")
