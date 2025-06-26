@@ -33,15 +33,6 @@ def show_script_results(alive_members, number_showed):
     for member in sorted(average_guesses_by_member, key=average_guesses_by_member.get)[:number_showed]:
         print(str(member) + ": " + str(average_guesses_by_member[member]))
 
-def register_results(solution, filename):
-    files_handling.write_answer_to_file(solution, filename)
-    answers = files_handling.load_answers_from_file(filename)
-
-    print("--------------------")
-    test_repetitions.check(answers, 7)
-    print("--------------------")
-    test_repetitions.count(answers)
-
 def check_results(filename):
     answers = files_handling.load_answers_from_file(filename)
 
@@ -49,6 +40,10 @@ def check_results(filename):
     test_repetitions.check(answers, 7)
     print("--------------------")
     test_repetitions.count(answers)
+
+def register_results(solution, filename):
+    files_handling.write_answer_to_file(solution, filename)
+    check_results(filename)
 
 def find_member(alive_members, message):
     while True:
@@ -157,8 +152,8 @@ members_name = choices_script.get_all_members_name()
 
 UI(members_name, True)
 
-# compute_needed_guesses(members_name, "Kazama Iroha")
-# compute_needed_guesses(members_name, "Koseki Bijou")
+#compute_needed_guesses(members_name, "Kazama Iroha")
+#compute_needed_guesses(members_name, "Koseki Bijou")
 
 # website: https://holomemsguesser.com/classic.html
 # members.json: https://holomemsguesser.com/members

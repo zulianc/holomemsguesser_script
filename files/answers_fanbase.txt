@@ -9,4 +9,11 @@
 17/06/2025=Gawr Gura
 18/06/2025=Nekomata Okayu
 19/06/2025=Houshou Marine
+20/06/2025=Vestia Zeta
+21/06/2025=A chan
+22/06/2025=Roboco
+23/06/2025=Kazama Iroha
+24/06/2025=IRyS
+25/06/2025=Mizumiya Su
+26/06/2025=Ninomae Inanis
 END

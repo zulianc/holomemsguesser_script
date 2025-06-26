@@ -9,4 +9,11 @@
 17/06/2025=Uruha Rushia
 18/06/2025=Takane Lui
 19/06/2025=Moona Hoshinova
+20/06/2025=Murasaki Shion
+21/06/2025=Tsukumo Sana
+22/06/2025=Shishiro Botan
+23/06/2025=Ayunda Risu
+24/06/2025=Aki Rosenthal
+25/06/2025=Amane Kanata
+26/06/2025=Hiodoshi Ao
 END

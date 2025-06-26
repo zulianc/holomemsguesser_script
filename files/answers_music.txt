@@ -9,4 +9,11 @@
 17/06/2025=Usada Pekora
 18/06/2025=Sakamata Chloe
 19/06/2025=Oozora Subaru
+20/06/2025=Pavolia Reine
+21/06/2025=Nanashi Mumei
+22/06/2025=Kikirara Vivi
+23/06/2025=Kiryu Coco
+24/06/2025=Koganei Niko
+25/06/2025=Shiranui Flare
+26/06/2025=Airani Iofifteen
 END
