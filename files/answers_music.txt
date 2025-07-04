@@ -16,4 +16,12 @@
 24/06/2025=Koganei Niko
 25/06/2025=Shiranui Flare
 26/06/2025=Airani Iofifteen
+27/06/2025=Gawr Gura
+28/06/2025=La+ Darknesss
+29/06/2025=Hoshimachi Suisei
+30/06/2025=Otonose Kanade
+01/07/2025=Inugami Korone
+02/07/2025=Pavolia Reine
+03/07/2025=Shiori Novella
+04/07/2025=Koseki Bijou
 END

@@ -16,4 +16,12 @@
 24/06/2025=IRyS
 25/06/2025=Mizumiya Su
 26/06/2025=Ninomae Inanis
+27/06/2025=Raora Panthera
+28/06/2025=Kikirara Vivi
+29/06/2025=Ayunda Risu
+30/06/2025=Yuzuki Choco
+01/07/2025=Juufuutei Raden
+02/07/2025=Hakos Baelz
+03/07/2025=Fuwamoco
+04/07/2025=AZKi
 END

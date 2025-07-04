@@ -23,4 +23,12 @@
 24/06/2025=Kazama Iroha
 25/06/2025=Uruha Rushia
 26/06/2025=Todoroki Hajime
+27/06/2025=Kureiji Ollie
+28/06/2025=Elizabeth Rose Bloodflame
+29/06/2025=Shirogane Noel
+30/06/2025=Oozora Subaru
+01/07/2025=Watson Amelia
+02/07/2025=Minato Aqua
+03/07/2025=Nakiri Ayame
+04/07/2025=Mori Calliope
 END

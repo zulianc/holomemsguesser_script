@@ -16,4 +16,12 @@
 24/06/2025=Aki Rosenthal
 25/06/2025=Amane Kanata
 26/06/2025=Hiodoshi Ao
+27/06/2025=Kaela Kovalskia
+28/06/2025=Natsuiro Matsuri
+29/06/2025=Tokino Sora
+30/06/2025=Rindo Chihaya
+01/07/2025=Ceres Fauna
+02/07/2025=Shirakami Fubuki
+03/07/2025=Ichijou Ririka
+04/07/2025=Sakura Miko
 END

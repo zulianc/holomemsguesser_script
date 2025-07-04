@@ -157,3 +157,4 @@ UI(members_name, True)
 
 # website: https://holomemsguesser.com/classic.html
 # members.json: https://holomemsguesser.com/members
+# song files: https://hololive-assets.sfo3.digitaloceanspaces.com/hololive-songs/{name123}.mp3
