@@ -24,4 +24,5 @@
 02/07/2025=Shirakami Fubuki
 03/07/2025=Ichijou Ririka
 04/07/2025=Sakura Miko
+05/07/2025=Juufuutei Raden
 END

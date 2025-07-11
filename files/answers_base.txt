@@ -31,4 +31,5 @@
 02/07/2025=Minato Aqua
 03/07/2025=Nakiri Ayame
 04/07/2025=Mori Calliope
+05/07/2025=Moona Hoshinova
 END

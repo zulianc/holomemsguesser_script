@@ -24,4 +24,5 @@
 02/07/2025=Pavolia Reine
 03/07/2025=Shiori Novella
 04/07/2025=Koseki Bijou
+05/07/2025=Ichijou Ririka
 END
