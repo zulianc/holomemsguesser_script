@@ -54,10 +54,11 @@ def find_member(alive_members, message):
                 print("You typed:", member)
                 return member
 
-def UI_base(members_name, skip_first):
+def UI_base(members_name):
     alive_members = members_name.copy()
 
-    skip = skip_first
+    skip = not input("Skip first guess? (warning: computing it will take some time) Answer with 'y' or nothing: ") == 'y'
+
     while (len(alive_members) > 1):
         if (not skip):
             show_script_results(alive_members, 5)
@@ -66,7 +67,7 @@ def UI_base(members_name, skip_first):
 
         pick = find_member(alive_members, "What member did you guessed? ")
 
-        answer = input("Correst guess? Answer with 'y' or nothing: ")
+        answer = input("Was " + pick + " the correct answer? Answer with 'y' or nothing: ")
         if (answer == "y"):
             alive_members = [pick]
         else:
@@ -112,7 +113,7 @@ def skip_option(mode_name):
     answer = input("Will you skip answering for " + mode_name + " mode? Answer with 'y' or nothing: ")
     return (answer == 'y')
 
-def UI(members_name, skip_first):
+def UI(members_name):
     if skip_option("every"):
         check_results("answers_base")
         check_results("answers_music")
@@ -120,7 +121,7 @@ def UI(members_name, skip_first):
         check_results("answers_stream")
     else:
         if not skip_option("base"):
-            UI_base(members_name, skip_first)
+            UI_base(members_name)
         if not skip_option("music"):
             UI_music(members_name)
         if not skip_option("fanbase"):
@@ -150,7 +151,7 @@ def compute_needed_guesses(members_name, pick):
 
 members_name = choices_script.get_all_members_name()
 
-UI(members_name, True)
+UI(members_name)
 
 #compute_needed_guesses(members_name, "Kazama Iroha")
 #compute_needed_guesses(members_name, "Koseki Bijou")
